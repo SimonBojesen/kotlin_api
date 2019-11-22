@@ -7,13 +7,15 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileWriter
 import java.util.ArrayList
 
 interface WebContent {
     fun save()
 }
 
-class WebServer(val content: WebContent, val port: Int = 80) {
+class WebServer(val content: WebContent, val port: Int) {
     fun start() {}
     fun stop() {
         TODO("Implement stop")
@@ -34,16 +36,20 @@ class ChoirContent : WebContent {
     fun getMember(id: Int): Member? = members[id]
 
     fun putMember(member: Member): Member {
-        if (member != null) {
-            members.put(member.id, member)
-        }
+        println("member: $member")
+        members[member.id] = member
+        println("members: $members")
         return member
     }
 
     // ...
     override fun save() {
-        val gson = Gson()
-        //val bufferedReader: BufferedReader = File().bufferedReader()
+        /*val gson = Gson()
+        val filePath = "src/main/kotlin/dk/cphbusiness/coroutines/server/data.json"
+        //val myFile = File(filePath)
+        gson.toJson(members, FileWriter(filePath))
+         */
+
     }
 }
 

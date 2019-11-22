@@ -14,10 +14,9 @@ class Server(val port: Int = 4711) {
     var running = true
     val serverSocket = ServerSocket(port)
 
-    fun handle(request: Request, response: Response) {
+    fun handle(request: Request, response: Response, content: ChoirContent) {
         println(request.resource)
         val gson = GsonBuilder().setPrettyPrinting().create()
-        val content = ChoirContent()
         //val members = content.members
         val method = request.method
         when (method) {
@@ -41,10 +40,11 @@ class Server(val port: Int = 4711) {
     }
 
     fun start() {
+        val content = ChoirContent()
         while (running) {
             val socket = serverSocket.accept()
             thread {
-                handle(Request(socket.getInputStream()), Response(socket.getOutputStream()))
+                handle(Request(socket.getInputStream()), Response(socket.getOutputStream()), content)
             }
         }
     }
