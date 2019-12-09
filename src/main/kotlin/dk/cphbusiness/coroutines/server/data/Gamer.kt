@@ -1,4 +1,3 @@
 package dk.cphbusiness.coroutines.server.data
 
-class Gamer {
-}
+data class Gamer (val id: Int, var nickname : String, var score : Int)

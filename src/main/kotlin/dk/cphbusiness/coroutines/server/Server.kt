@@ -3,6 +3,7 @@ package dk.cphbusiness.coroutines.server
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonWriter
+import dk.cphbusiness.coroutines.server.content.ChoirContent
 import kotlin.concurrent.thread
 import kotlinx.coroutines.*
 import java.io.BufferedInputStream

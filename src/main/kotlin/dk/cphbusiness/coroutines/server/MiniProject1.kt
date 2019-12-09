@@ -6,52 +6,13 @@ import dk.cphbusiness.coroutines.server.Server as s
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import dk.cphbusiness.coroutines.server.content.WebContent
+import dk.cphbusiness.coroutines.server.data.Member
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
+import java.lang.Exception
 import java.util.ArrayList
-
-interface WebContent {
-    fun save()
-}
-
-class WebServer(val content: WebContent, val port: Int) {
-    fun start() {}
-    fun stop() {
-        TODO("Implement stop")
-    }
-}
-
-
-data class Member(val id: Int, val name: String)
-
-class ChoirContent : WebContent {
-    val members = mutableMapOf<Int, Member>(
-        7 to Member(7, "Kurt"),
-        17 to Member(17, "Sonja")
-    )
-
-    fun getMember(): List<Member> = members.values.toList()
-
-    fun getMember(id: Int): Member? = members[id]
-
-    fun putMember(member: Member): Member {
-        println("member: $member")
-        members[member.id] = member
-        println("members: $members")
-        return member
-    }
-
-    // ...
-    override fun save() {
-        /*val gson = Gson()
-        val filePath = "src/main/kotlin/dk/cphbusiness/coroutines/server/data.json"
-        //val myFile = File(filePath)
-        gson.toJson(members, FileWriter(filePath))
-         */
-
-    }
-}
 
 fun listFunctions(content: Any) {
     val contentType = content::class
@@ -61,45 +22,12 @@ fun listFunctions(content: Any) {
     }
 }
 
-fun callFunction(content: Any, method: Method, resource: String, body: String): Any? {
-    val gson = GsonBuilder().setPrettyPrinting().create()
-    var parts : List<String> = ArrayList()
-    if (body == "" || body == null) parts = resource.split("/" + body).filter { !it.isEmpty() }
-    else parts = resource.split("/").filter { !it.isEmpty() } + body
-    println("parts: " + parts)
-    if (parts.size == 0) return null
 
-    val methodName = method.toString().toLowerCase() + (parts[0].capitalize())
-    println(methodName)
-    val type = content::class
-    val function = type.declaredFunctions
-        .filter { it.name == methodName }
-        .filter { it.parameters.size == parts.size }
-        .firstOrNull()
-    if (function == null) return null
-    if (function.parameters.size > 1) {
-        val p = function.parameters[1]
-        println("type-classifier: " + p.type.classifier)
-        when (p.type.classifier) {
-            Int::class -> {
-                val v1 = parts[1].toInt()
-                return function.call(content, v1)
-            }
-            else -> {
-                println("body: " + body)
-                val member = gson.fromJson(body, Member::class.java)
-                return function.call(content, member)
-            }
-        }
-    } else return function.call(content)
-}
 
 /*fun main() {
-    val content = ChoirContent()
-    println(callFunction(content, Method.GET, "/member/7"))
-
-    val server = WebServer(content, 4711)
-    server.start()
-
+    val content = ClubContent()
+    println(content.getGamer())
+    content.deleteGamer(1)
+    println(content.getGamer())
 }*/
 

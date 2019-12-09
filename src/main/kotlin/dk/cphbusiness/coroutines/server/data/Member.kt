@@ -1,4 +1,3 @@
 package dk.cphbusiness.coroutines.server.data
 
-class Member {
-}
+data class Member(val id: Int, var name: String)
