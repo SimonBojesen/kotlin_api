@@ -1,6 +1,7 @@
 package dk.cphbusiness.coroutines.server
 
 import com.google.gson.GsonBuilder
+import dk.cphbusiness.coroutines.server.data.Gamer
 import dk.cphbusiness.coroutines.server.data.Member
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -14,7 +15,7 @@ enum class Method { GET, PUT, POST, DELETE, NONHTTP }
 class Protocol {
 }
 
-class Request(input: InputStream, val content: Any) {
+class Request(input: InputStream) {
     val resource: String
     val method: Method
     val body: String
@@ -70,8 +71,9 @@ class Request(input: InputStream, val content: Any) {
                 }
                 else -> {
                     println("body: " + body)
-                    val member = gson.fromJson(body, Member::class.java)
-                    return function.call(content, member)
+                    //MUST CHANGE DATA CLASS HERE WHEN USING NEW CLASS
+                    val gamer = gson.fromJson(body, Gamer::class.java)
+                    return function.call(content, gamer)
                 }
             }
         } else return function.call(content)

@@ -11,33 +11,36 @@ class GenerateData {
     val nicknames = listOf<String>("Xtremekilla", "CringePwn69", "TotallyNot12", "UrMomGay", "420BlazeIt")
     val scores = listOf<Int>(1000, 2000, 3000, 4000, 5000)
 
-    fun generateGamers(amount: Int) : MutableList<Gamer> {
-        val gamers = ArrayList<Gamer>()
-        for(i in 1..amount){
+    fun generateGamers(amount: Int) : MutableMap<Int, Gamer> {
+        val gamers: MutableMap<Int, Gamer> = mutableMapOf()
+        for(i in 0..amount){
             val gamer = Gamer(i, nicknames.random(), scores.random())
-            gamers.add(gamer)
+            gamers[i] = gamer
         }
         return gamers
     }
 
-    fun readGamers(filename: String) : MutableList<Gamer> {
+    fun readGamers(filename: String) : MutableMap<Int, Gamer> {
         val gson = Gson()
         val path = StringBuilder()
         path.append("src/main/kotlin/dk/cphbusiness/coroutines/server/data/")
         path.append(filename)
-        return if(File(path.toString()).exists()) {
+        //If file exists reads the contents of the file
+        if(File(path.toString()).exists()) {
             val bufferedReader: BufferedReader = File(path.toString()).bufferedReader()
             val json = bufferedReader.use { it.readText() }
-            val type = object : TypeToken<List<Gamer>>() {}.type
-            gson.fromJson<ArrayList<Gamer>>(json, type)
-        } else {
-            return mutableListOf()
+            val type = object : TypeToken<MutableMap<Int, Gamer>>() {}.type
+            return if (json.isNullOrBlank()) mutableMapOf()
+            else gson.fromJson(json, type)
+        }
+        else {
+            return mutableMapOf()
         }
     }
 
-    fun write(filename : String, list : List<Any>){
+    fun write(filename : String, map : MutableMap<Int, Gamer>){
         val gson = Gson()
-        val jsonString = gson.toJson(list)
+        val jsonString = gson.toJson(map)
         val path = StringBuilder()
         path.append("src/main/kotlin/dk/cphbusiness/coroutines/server/data/")
         path.append(filename)
