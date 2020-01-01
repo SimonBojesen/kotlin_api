@@ -38,6 +38,7 @@ class GenerateData {
         }
     }
 
+
     fun write(filename : String, map : MutableMap<Int, Gamer>){
         val gson = Gson()
         val jsonString = gson.toJson(map)
@@ -46,4 +47,6 @@ class GenerateData {
         path.append(filename)
         File(path.toString()).bufferedWriter().use { out -> out.write(jsonString) }
     }
+
+
 }
